@@ -1,0 +1,89 @@
+<apex:page controller="CntrlMemberSearch" sidebar="false">
+    <apex:form id="form">
+        <apex:sectionHeader title="회원 검색"/>
+        <apex:pageMessages id="messagearea" showDetail="false"/>
+
+        <apex:pageBlock title="검색 조건" mode="edit">
+            
+            <!-- 생성한 블록의 하단에 버튼을 추가 -->
+            <apex:pageBlockButtons location="bottom">
+                <apex:commandButton value="검색" action="{!search}"/>
+                <apex:commandButton value="돌아가기" action="{!returnPage}"/>
+            </apex:pageBlockButtons>
+
+            <!-- 검색 조건 -->
+            <apex:pageBlockSection columns="1" showHeader="true">
+                <apex:pageBlockSectionItem>
+                    <apex:outputText value="회원 번호"/>
+                    <apex:inputField value="{!srchCndtnMemberObj.MemberNo__c}"/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem>
+                    <apex:outputText value="회원명"/>
+                    <apex:inputField value="{!srchCndtnMemberObj.Name}"/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem>
+                    <apex:outputText value="회원 등록일"/>
+                    <apex:inputField value="{!srchCndtnMemberObj.RegistDate__c}"/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem>
+                    <apex:outputText value="전화 번호"/>
+                    <apex:inputField value="{!srchCndtnMemberObj.Phone__c}"/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem>
+                    <apex:outputText value="이메일 주소"/>
+                    <apex:inputField value="{!srchCndtnMemberObj.Email__c}"/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem>
+                    <apex:outputText value="대여 유무"/>
+                    <apex:selectList value="{!srchCndtnIsLental}" size="1">
+                        <apex:selectOptions value="{!isLentalSelItems}"/>
+                    </apex:selectList>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem>
+                    <apex:outputText value="반납 유무"/>
+                    <apex:selectList value="{!srchCndtnMemberObj.ReturnBook__c}" size="1">
+                        <apex:selectOptions value="{!isReturnSelItems}"/>
+                    </apex:selectList>
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+
+        <!-- 검색 결과 -->
+        <apex:pageBlock title="검색 결과">
+            <apex:pageBlockButtons location="top">
+                <apex:commandButton value="회원 추가" action="{!newMember}"/>
+            </apex:pageBlockButtons>
+
+            <!-- 검색 결과를 표 형식으로 표시 -->
+            <apex:pageBlockTable value="{!srchRsltList}" var="result" rendered="{!srchRsltList.size > 0}">
+
+                <apex:column style="width: 3%;">
+                    <apex:facet name="header">상세</apex:facet>
+                    <apex:commandLink value="상세" action="{!URLFOR($Page.MemberDetail, null, [memberId = result.Id, retURL = currentUrl])}"/>
+                </apex:column>
+
+                <apex:column style="width: 3%;">
+                    <apex:facet name="header">편집</apex:facet>
+                    <apex:commandLink value="편집" action="{!URLFOR($Page.MemberEdit, null, [memberId = result.Id, retURL = currentUrl, saveURL=saveUrl])}"/>
+                </apex:column>
+
+                <apex:column value="{!result.MemberNo__c}" headerValue="회원 번호" style="width:13%;"/>
+                <apex:column value="{!result.Name}" headerValue="회원명" style="width:21%;"/>
+
+                <!-- 한국어판으로 설정한 경우, 날짜가 "yyyy.M.d" 형식으로 표시되기 때문에, yyyy-mm-dd 형식으로 표시하기 위해 포맷 지정 -->
+                <!-- <apex:column value="{!result.RegistDate__c}" headerValue="회원 등록일" style="width: 20%;"/> -->
+                <apex:column style="width:20%;">
+                    <apex:facet name="header">회원 등록일</apex:facet>
+                    <apex:outputText value="{!TEXT(YEAR(result.RegistDate__c)) + '-' + LPAD(TEXT(MONTH(result.RegistDate__c)), 2, '0') + '-' + LPAD(TEXT(DAY(result.RegistDate__c)), 2, '0')}"/>
+                </apex:column>
+
+                <apex:column style="width:20%;">
+                    <apex:facet name="header">대여 유무</apex:facet>
+                    <apex:outputText value="대여중" rendered="{!result.IsLental__c}"/>
+                    <apex:outputText value="미대여" rendered="{!NOT(result.IsLental__c)}"/>
+                </apex:column>
+                <apex:column value="{!result.ReturnBook__c}" headerValue="반납 유무" style="width:20%;"/>
+            </apex:pageBlockTable>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

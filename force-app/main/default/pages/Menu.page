@@ -1,0 +1,32 @@
+<!--
+	controller="CntrlMenu"
+		페이지 호출 시, 같이 호출 될 클래스 지정
+		지정된 클래스는 호출 시, 기본 생성자를 호출함
+-->
+<apex:page controller="CntrlMenu" sidebar="false">
+	<style>
+	.cmdBtn {
+	     width     : 400px;
+	     height    : 50px;
+	}
+	</style>
+
+<!--
+	{!URLFOR(페이지 개체, null, [파라미터명=파라미터 변수 or 데이터])}
+		현재 탭의 페이지를 '페이지 개체'로 이동시킨다. 
+		이 때, 지정한 '파라미터명'의 '파라미터 변수 or 데이터'를 GET 방식으로 옮길 수 있다.
+-->
+	<apex:form id="form">
+    	<center>
+            <apex:outputText value="도서 관리 프로그램" style="font-size:20pt; font-weight:bold;"/>
+            <br/><br/><br/>
+
+			<!-- 회원 검색 화면으로 화면전이 및 이전 화면 URL을 파라미터로 전달 -->
+			<apex:commandButton value="회원 관리" action="{!URLFOR($Page.MemberSearch, null, [retURL=currentUrl])}" styleClass="cmdBtn" style="font-size:20pt;"/>
+			<br/><br/>
+
+            <!-- 도서 검색 화면으로 화면전이 및 이전 화면 URL을 파라미터로 전달 -->
+            <apex:commandButton value="도서 관리" action="{!URLFOR($Page.BookSearch, null, [retURL=currentUrl])}" styleClass="cmdBtn" style="font-size:20pt;"/>
+        </center>
+  	</apex:form>
+</apex:page>
