@@ -14,6 +14,7 @@
         $A.enqueueAction(action);
     }
 
+    /*
     , clickCreateItem : function(component, event, helper) {
         var validItem = component.find('newcampingform').reduce(function (validSoFar, inputCmp) {
             inputCmp.showHelpMessageIfInvalid();
@@ -37,5 +38,41 @@
                 , 'Packed__c' : false
             });
         }
+    }
+    */
+
+    , handleAddItem : function (component, event, helper) {
+        var newItem = event.getParam("item");
+        helper.createItem(component, newItem);
+
+        /*
+        var action = component.get("c.saveItem");
+        action.setParams({"item" : item});
+
+        action.setCallback(this, function(response) {
+            var state = response.getState();
+
+            if (component.isValid() && state === "SUCCESS") {
+                var items = component.get("v.items");
+                items.push(item);
+                component.set("v.items", items);
+            }
+        });
+
+        $A.enqueueAction(action);
+        */
+       
+        /*
+        this.saveItem(component, item, function(response) {
+            var state = response.getState();
+
+            if(component.isValid() && state === "SUCCESS") {
+                var items=component.get("v.items");
+
+                items.push(response.getReturnValue());
+                component.set("v.items", items);
+            }
+        });
+        */
     }
 })

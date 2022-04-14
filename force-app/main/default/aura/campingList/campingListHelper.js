@@ -1,7 +1,20 @@
 ({
-    createItem : function(component, Item) {
+    validateFields : function(component, field) {
+        var nameField = field;
+        var expname = nameField.get("v.value");
+
+        console.log('yes : ' + nameField);
+
+        if ($A.util.isEmpty(expname)) {
+            component.set("v.er", true);
+            nameField.set("v.errors", [{message : "this field can't be blank"}]);
+        } else {
+            nameField.set("v.errors", null);
+        }
+    }
+    , createItem : function(component, Item) {
         var action = component.get("c.saveItem");
-        action.setParams({"campingItem" : Item});
+        action.setParams({"item" : Item});
 
         action.setCallback(this, function(response) {
             var state = response.getState();
